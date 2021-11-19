@@ -15,7 +15,7 @@ const Item = ({ item, onPress, backgroundColor, textColor }) => (
 const AppTest = () => {
    /* Ici le modifications*/
    const [monChoix, setMonChoix] = useState(null);
-   const [modifText, onChangeModifText] = useState("d")
+   const [modifText, onChangeModifText] = useState("");
 //////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////enter un mot right/////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////
@@ -100,6 +100,113 @@ const retirerMot = () => {
   setData(data);
   setVisibleR(false);
 };
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////enter un mot left/////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////
+const [monChoix1, setMonChoix1] = useState(null);
+const [modifText1, onChangeModifText1] = useState("");
+const [visible1, setVisible1] = useState(false);
+const [motTemp1, setMotTemp1] = useState('');
+const [data1, setData1] = useState([]);
+const [selectedId1, setSelectedId1] = useState(null);
+
+const showDialog1 = () => {
+  setVisible1(true);
+};
+
+const annulerMot1 = () => {
+  setVisible1(false);
+};
+
+const ajouterMot1 = () => {
+  // The user has pressed the "Delete" button, so here you can do your own logic.
+  // ...Your logic
+  setVisible1(false);
+  setData1(listActuel => [...listActuel, {id: data1.length.toString(), text: motTemp1}]);
+};
+
+const renderItem1 = ({ item }) => {
+  const backgroundColor = item.id === selectedId1 ? "#696969" : "lightsteelblue";
+  const color = item.id === selectedId1 ? 'white' : 'black';
+
+  return (
+    
+    <Item
+      item={item}
+      onPress={() => {
+        setSelectedId1(item.id);
+        setMonChoix1(item.id);
+        onChangeModifText1(data1[item.id].text);
+      }}
+      backgroundColor={{ backgroundColor }}
+      textColor={{ color }}
+    />
+  );
+};
+
+//////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////modifier un mot left//////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////
+const [visibleM1, setVisibleM1] = useState(false);
+
+const showDialogM1 = () => {
+  setVisibleM1(true);
+};
+
+const annulerMotM1 = () => {
+  setVisibleM1(false);
+};
+
+const modifierMot1 = () => {
+  // The user has pressed the "Delete" button, so here you can do your own logic.
+  // ...Your logic
+  data1[monChoix1].text = modifText1;
+  setData1(data1);
+  setVisibleM1(false);
+};
+
+//////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////retirer un mot left//////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////
+
+const [visibleR1, setVisibleR1] = useState(false);
+
+const showDialogR1 = () => {
+  setVisibleR1(true);
+};
+
+const annulerMotR1 = () => {
+  setVisibleR1(false);
+};
+
+const retirerMot1 = () => {
+  // The user has pressed the "Delete" button, so here you can do your own logic.
+  // ...Your logic
+  data1[monChoix1].text = '';
+  setData1(data1);
+  setVisibleR1(false);
+};
+
+//////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////Gauche vers Droite ////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////
+const gaucheVersDroite = () => {
+  let gVd = data1[monChoix1].text;
+  setData(listActuelle => [...listActuelle, {id: data.length.toString(), text: gVd}]);
+  data1[monChoix1].text = '';
+  setData1(data1);
+};
+
+//////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////Droite vers Gauche ////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////
+const droiteVersGauche = () => {
+  let dVg = data[monChoix].text;
+  setData1(listActuelle => [...listActuelle, {id: data1.length.toString(), text: dVg}]);
+  data[monChoix].text = '';
+  setData(data);
+};
    ////////////////////////////////////////////////////////////////////////////////////////
    ///////////////////////////////////////////////////////////////////////////////////////////
   return(
@@ -134,8 +241,14 @@ const retirerMot = () => {
         <View style={styles.left}>
           {/*Cette partie contiendra les codes des parties constituants la partie
           gauche du corps de l'application*/}
-          <View style={[styles.textContent, {borderColor: 'darkorchid',}]}>
+          <View style={[styles.textContent, {borderColor: 'dimgray',}]}>
             {/*Cette partie contient le code de la zone d'affichage du coté gauche de l'application*/}
+
+            {/* ici est le code de la flatlist */}
+            <FlatList
+              data={data1}
+              renderItem={renderItem1}
+            />
 
           </View>
 
@@ -144,19 +257,19 @@ const retirerMot = () => {
 
             <View style={styles.btnView}>
               {/*le boutton ajouter*/}
-              <TouchableOpacity onPress={() => Alert.alert('Hello, world!')}>
+              <TouchableOpacity onPress={showDialog1}>
                 <Text style={{fontSize: 50, color: 'dimgray'}}>+</Text>
               </TouchableOpacity>
             </View>
             <View style={styles.btnView}>
               {/*le boutton modifier*/}
-              <TouchableOpacity onPress={() => Alert.alert('Hello, world!')}>
+              <TouchableOpacity onPress={showDialogM1}>
                 <Text style={{fontSize: 50, color: 'dimgray'}}>m</Text>
               </TouchableOpacity>
             </View>
             <View style={styles.btnView}>
               {/*le boutton retirer*/}
-              <TouchableOpacity onPress={() => Alert.alert('Hello, world!')}>
+              <TouchableOpacity onPress={showDialogR1}>
                 <Text style={{fontSize: 50, color: 'dimgray'}}>-</Text>
               </TouchableOpacity>
             </View>
@@ -167,13 +280,13 @@ const retirerMot = () => {
           {/*Cette parie contient le code des boutons du centre de l'application*/}
           <View style={styles.centerBtnView1}>
               {/*le boutton ajouter*/}
-              <TouchableOpacity onPress={() => Alert.alert('Hello, world!')}>
+              <TouchableOpacity onPress={gaucheVersDroite}>
                 <Text style={{fontSize: 30, color: 'dimgray'}}>{">>"}</Text>
               </TouchableOpacity>
             </View>
             <View style={styles.centerBtnView2}>
               {/*le boutton modifier*/}
-              <TouchableOpacity onPress={() => Alert.alert('Hello, world!')}>
+              <TouchableOpacity onPress={droiteVersGauche}>
                 <Text style={{fontSize: 30, color: 'dimgray'}}>{"<<"}</Text>
               </TouchableOpacity>
             </View>
@@ -183,7 +296,7 @@ const retirerMot = () => {
         <View style={styles.right}>
           {/*Cette partie contiendra les codes des parties constituants la partie
           droite du corps de l'application*/}
-          <View style={[styles.textContent, {borderColor: 'darkorange',}, styles.flatListContainer]}>
+          <View style={[styles.textContent, {borderColor: 'dimgray',}, styles.flatListContainer]}>
             {/*Cette partie contient le code de la zone d'affichage du coté droit de l'application*/}
 
             {/* ici est le code de la flatlist */}
@@ -233,7 +346,7 @@ const retirerMot = () => {
 
       </View>
 
-      {/*Boite de dialogue */}
+      {/*Boite de dialogue Ajouter droit*/}
       <Dialog.Container visible={visible}>
         <Dialog.Title>Ajouter un mot</Dialog.Title>
         <Dialog.Description>
@@ -249,7 +362,7 @@ const retirerMot = () => {
 
       {/* ////////////////////////////////////////////////////////////////////////////////////////
      ///////////////////////////////////////////////////////////////////////////////////////// */}
-    {/*Boite de dialogue */}
+    {/*Boite de dialogue modifier droit*/}
     <Dialog.Container visible={visibleM}>
         <Dialog.Title>Modifier un mot</Dialog.Title>
         <Dialog.Description>
@@ -266,14 +379,60 @@ const retirerMot = () => {
 
      {/* ////////////////////////////////////////////////////////////////////////////////////////
      ///////////////////////////////////////////////////////////////////////////////////////// */}
-    {/*Boite de dialogue */}
+    {/*Boite de dialogue effacer droit*/}
     <Dialog.Container visible={visibleR}>
-        <Dialog.Title>Modifier un mot</Dialog.Title>
+        <Dialog.Title>Effacer un mot</Dialog.Title>
         <Dialog.Description>
-          Voulez vous vraiment supprimer ce mot?
+          Voulez vous vraiment effacer ce mot?
         </Dialog.Description>
         <Dialog.Button label="Non" onPress={annulerMotR} />
         <Dialog.Button label="OUi" onPress={retirerMot} />
+    </Dialog.Container>
+
+    {/* ////////////////////////////////////////////////////////////////////////////////////////
+     ///////////////////////////////////////////////////////////////////////////////////////// */}
+
+    {/*Boite de dialogue Ajouter gauche*/}
+    <Dialog.Container visible={visible1}>
+        <Dialog.Title>Ajouter un mot</Dialog.Title>
+        <Dialog.Description>
+          Ajouter votre mot ici.
+        </Dialog.Description>
+        <DialogInput 
+          placeholder="votre mot ici!"
+          onChangeText = {setMotTemp1}
+        />
+        <Dialog.Button label="Annuler" onPress={annulerMot1} />
+        <Dialog.Button label="Ajouter" onPress={ajouterMot1} />
+      </Dialog.Container>
+
+    {/* ////////////////////////////////////////////////////////////////////////////////////////
+     ///////////////////////////////////////////////////////////////////////////////////////// */}
+    {/*Boite de dialogue modifier gauche*/}
+    <Dialog.Container visible={visibleM1}>
+        <Dialog.Title>Modifier un mot</Dialog.Title>
+        <Dialog.Description>
+          Modifier votre mot ici.
+        </Dialog.Description>
+        <DialogInput 
+          // placeholder="votre mot ici!"
+          onChangeText = {onChangeModifText1}
+          value={modifText1}
+        />
+        <Dialog.Button label="Annuler" onPress={annulerMotM1} />
+        <Dialog.Button label="Modifier" onPress={modifierMot1} />
+    </Dialog.Container>
+
+    {/* ////////////////////////////////////////////////////////////////////////////////////////
+     ///////////////////////////////////////////////////////////////////////////////////////// */}
+    {/*Boite de dialogue effacer droit*/}
+    <Dialog.Container visible={visibleR1}>
+        <Dialog.Title>Effacer un mot</Dialog.Title>
+        <Dialog.Description>
+          Voulez vous vraiment effacer ce mot?
+        </Dialog.Description>
+        <Dialog.Button label="Non" onPress={annulerMotR1} />
+        <Dialog.Button label="OUi" onPress={retirerMot1} />
     </Dialog.Container>
     </View>
   );
@@ -291,7 +450,7 @@ const styles = StyleSheet.create({
   principal: {
     flex: 1,
     paddingTop: 30,
-    backgroundColor: 'whitesmoke',
+    backgroundColor: '#040E14',
     flexDirection: "column"
   },
 
@@ -306,8 +465,10 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontStyle: 'italic',
     borderWidth: 3,
+    borderColor: 'dimgray',
     paddingLeft: 20,
     paddingRight: 20,
+    color: 'dimgray',
   },
 
   /* Mise en forme du corps de l'application */
@@ -338,6 +499,7 @@ const styles = StyleSheet.create({
     flex: 8,
     // borderColor: "blue",
     borderWidth: 2,
+    borderRadius: 10,
   },
   btnContent:{
     flex: 1,
@@ -351,6 +513,8 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     paddingTop: -10,
+    borderRadius: 20,
+    borderColor: 'dimgray',
   },
   centerBtnView1:{
     borderWidth: 1,
@@ -359,6 +523,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     paddingTop: -10,
+    borderColor: 'dimgray',
   },
   centerBtnView2:{
     borderWidth: 1,
@@ -367,6 +532,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     paddingTop: -10,
+    borderColor: 'dimgray',
   },
   item: {
     marginVertical: 1,
@@ -382,7 +548,7 @@ const styles = StyleSheet.create({
   },
   message: {
     fontSize: 10,
-    color: 'darkgray',
+    color: 'dimgray',
   },
 
 });
